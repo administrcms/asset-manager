@@ -1,0 +1,30 @@
+language: php
+
+php:
+  - 5.5
+  - 5.6
+  - 7
+  - nightly
+  - hhvm
+
+addons:
+    code_climate:
+        repo_token: 3a6b553fcac8722c83b99b626a861dee6e46c142a39b58d5f3d851bf69cf9a4d
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+before_install:
+  - composer selfupdate
+
+install:
+  - composer install --no-interaction
+
+script:
+  - phpunit
+
+after_script:
+  - vendor/bin/test-reporter
