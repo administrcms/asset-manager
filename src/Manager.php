@@ -2,9 +2,19 @@
 
 namespace Administr\Assets;
 
+use Administr\Assets\Contracts\Shortcut;
+
 class Manager
 {
+    /**
+     * @var array
+     */
     private $assets = [];
+
+    /**
+     * @var array
+     */
+    private $shortcuts = [];
 
     /**
      * Add an asset of a given type
@@ -50,6 +60,36 @@ class Manager
         }, $assets);
     }
 
+    /**
+     * Register an Asset shortcut.
+     *
+     * Shortcuts are a way to register multiple assets at once.
+     *
+     * @param $name
+     * @param Shortcut $shortcut
+     * @return $this
+     */
+    public function shortcut($name, $shortcut)
+    {
+        $this->shortcuts[$name] = $shortcut;
+
+        return $this;
+    }
+
+    /**
+     * Register multiple shortcuts.
+     *
+     * @param array $shortcuts
+     * @return $this
+     */
+    public function shortcuts(array $shortcuts)
+    {
+        foreach ($shortcuts as $name => $shortcut) {
+            $this->shortcut($name, $shortcut);
+        }
+
+        return $this;
+    }
 
     public function __call($name, $params)
     {
@@ -69,6 +109,12 @@ class Manager
                     return $this->add($name, $type, $priority);
                 break;
             }
+        }
+
+        // If we have registered a shortcut with this name,
+        // resolve it through the IoC and execute it.
+        if(array_key_exists($name, $this->shortcuts)) {
+            return app($this->shortcuts[$name])->execute();
         }
 
         $className = get_class($this);
