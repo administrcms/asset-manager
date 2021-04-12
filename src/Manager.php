@@ -52,7 +52,7 @@ class Manager
         // Sort the assets by their priority,
         // the higher priority, the higher in list
         usort($assets, function(Asset $a, Asset $b) {
-            return $a->getPriority() - $b->getPriority();
+            return $b->getPriority() - $a->getPriority();
         });
 
         // Return an array with only the assets names
