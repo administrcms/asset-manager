@@ -3,6 +3,7 @@
 namespace Administr\Assets;
 
 use Administr\Assets\Contracts\Shortcut;
+use Illuminate\Support\Str;
 
 class Manager
 {
@@ -93,7 +94,7 @@ class Manager
 
     public function __call($name, $params)
     {
-        if ( starts_with($name, 'get') || starts_with($name, 'add') )
+        if ( Str::startsWith($name, 'get') || Str::startsWith($name, 'add') )
         {
             $method = substr($name, 0, 3);
             $type = substr($name, 3);
